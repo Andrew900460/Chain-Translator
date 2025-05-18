@@ -1,1 +1,4 @@
-This is the final piece of tomfoolery, don't be surprised if the translation is poo poo.
+Test Line 1
+This is Test Line 2!
+This is the third test line.
+Hello world!

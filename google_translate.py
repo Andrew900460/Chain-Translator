@@ -3,6 +3,7 @@ import time
 import asyncio
 import random
 import googletrans
+import httpx
 from googletrans import Translator
 
 def insert_between(original_list, value_to_insert):
@@ -26,9 +27,14 @@ translate_back_to_base = config["translate_back_to_base_each_time"]
 
 translator = Translator()
 
-async def translate(text,from_lang,to_lang):
-	text_to_translate = await translator.translate(text, src=from_lang, dest=to_lang)
-	return text_to_translate
+async def translate(text,from_lang,to_lang) -> str:
+	try:
+		text_to_translate = await translator.translate(text, src=from_lang, dest=to_lang)
+		return text_to_translate.text
+	except httpx.LocalProtocolError as e:
+		print(f"Failed to translate '{text}': from {from_lang} to {to_lang}")
+
+	return text
 
 async def main():
 	all_final_translations = []
@@ -70,9 +76,10 @@ async def chain_translate(text_to_translate: str):
 	print("Starting Message: ", current_message)
 
 	for i in range(len(language_chain) - 1):
+		print(time.time())
 		cur_lang = language_chain[i]
 		next_lang = language_chain[i+1]
-		current_message = (await translate(current_message, cur_lang, next_lang)).text
+		current_message = await translate(current_message, cur_lang, next_lang)
 
 		if translate_back_to_base:
 			if next_lang == base_language:
@@ -80,7 +87,7 @@ async def chain_translate(text_to_translate: str):
 		else:
 			print(next_lang, " | ", current_message)
 
-	current_message = (await translate(current_message, language_chain[-1], language_chain[0])).text
+	current_message = await translate(current_message, language_chain[-1], language_chain[0])
 
 	if translate_back_to_base:
 		print("Final Translation: ", language_chain[-1], "->", language_chain[0], " | ", current_message)

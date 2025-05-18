@@ -33,12 +33,19 @@ async def translate(text,from_lang,to_lang):
 async def main():
     all_final_translations = []
     for text in texts_to_translate:
-        ft = await ChainTranslate(text)
+        ft = await chain_translate(text)
         all_final_translations.append(ft)
 
     print("FINISHED! Here are all the final translations:")
+    print()
     for ft in all_final_translations:
         print(ft)
+    print()
+
+    t = time.localtime()
+    current_time = time.strftime("%H:%M:%S", t)
+
+    print("Translations completed at:", current_time)
 
     # newChain = ""
     # for i in language_chain:
@@ -47,7 +54,7 @@ async def main():
     #     newChain+="\","
     # print(newChain)
 
-async def ChainTranslate(text_to_translate: str):
+async def chain_translate(text_to_translate: str):
     language_chain = original_language_chain.copy()
     print("Total Languages: ", len(language_chain))
     if randomize_chain:

@@ -1,0 +1,7 @@
+{
+  "base_language": "en",
+  "language_chain": ["pa","vi","yi","sl","fr","ro","mn","el","pt","es","ja","ne","pl","it","zh","is","da","he","nl","haw","am","ar","ru","tl","ko","sv","uk","de","fi","hi","cy","zu"],
+  "translate_back_to_base_each_time": true,
+  "randomize_chain_for_each_string": false,
+  "print_all_available_languages": false
+}

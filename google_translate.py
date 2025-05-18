@@ -1,10 +1,14 @@
 import json
 import time
+import datetime
+import math
 import asyncio
 import random
 import googletrans
 import httpx
 from googletrans import Translator
+
+start_time = time.time()
 
 def insert_between(original_list, value_to_insert):
 	new_list = []
@@ -51,13 +55,20 @@ async def main():
 	t = time.localtime()
 	current_time = time.strftime("%H:%M:%S", t)
 
+	end_time = time.time()
+	elapsed_time_seconds = end_time - start_time
+	elapsed_time_seconds_truncated = math.trunc(elapsed_time_seconds)
+
+	elapsed_time = datetime.timedelta(seconds=elapsed_time_seconds_truncated)
+
 	print("Translations completed at:", current_time)
+	print("Elapsed time:", str(elapsed_time).zfill(8))
 
 	# newChain = ""
 	# for i in language_chain:
-	#     newChain+='"'
-	#     newChain+=i
-	#     newChain+="\","
+	#   newChain+='"'
+	#	 newChain+=i
+	#	 newChain+="\","
 	# print(newChain)
 
 async def chain_translate(text_to_translate: str):
@@ -76,7 +87,6 @@ async def chain_translate(text_to_translate: str):
 	print("Starting Message: ", current_message)
 
 	for i in range(len(language_chain) - 1):
-		print(time.time())
 		cur_lang = language_chain[i]
 		next_lang = language_chain[i+1]
 		current_message = await translate(current_message, cur_lang, next_lang)

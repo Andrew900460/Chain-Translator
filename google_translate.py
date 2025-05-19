@@ -32,12 +32,18 @@ translate_back_to_base = config["translate_back_to_base_each_time"]
 translator = Translator()
 
 async def translate(text,from_lang,to_lang) -> str:
-	try:
-		text_to_translate = await translator.translate(text, src=from_lang, dest=to_lang)
-		return text_to_translate.text
-	except httpx.LocalProtocolError as e:
-		print(f"Failed to translate '{text}': from {from_lang} to {to_lang}")
-
+	for i in range(10):
+		try:
+			text_to_translate = await translator.translate(text, src=from_lang, dest=to_lang)
+			return text_to_translate.text
+		except httpx.LocalProtocolError as e:
+			print(f"Failed to translate '{text}': from {from_lang} to {to_lang}")
+			break
+		except httpx.ReadTimeout as e:
+			print("Timeout error, trying again...")
+		except Exception as e:
+			print(f"There was some other error! {str(e)}")
+			break
 	return text
 
 async def main():

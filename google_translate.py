@@ -6,6 +6,7 @@ import asyncio
 import random
 import googletrans
 import httpx
+from plyer import notification
 from googletrans import Translator
 
 start_time = time.time()
@@ -65,10 +66,15 @@ async def main():
 	elapsed_time_seconds = end_time - start_time
 	elapsed_time_seconds_truncated = math.trunc(elapsed_time_seconds)
 
-	elapsed_time = datetime.timedelta(seconds=elapsed_time_seconds_truncated)
+	elapsed_time = datetime.timedelta(seconds = elapsed_time_seconds_truncated)
 
 	print("Translations completed at:", current_time)
 	print("Elapsed time:", str(elapsed_time).zfill(8))
+	notification.notify(
+		title = "Chain Translator",
+		message = "Translations complete!",
+		timeout = 10
+	)
 
 	# newChain = ""
 	# for i in language_chain:
